@@ -1,0 +1,8 @@
+[core]
+	editor = nvim
+	excludesfile = ~/.config/git/ignore
+[init]
+	defaultBranch = main
+[include]
+	# name and email for this machine live here, written by install.sh
+	path = ~/.gitconfig.local

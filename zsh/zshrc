@@ -1,0 +1,40 @@
+# Where this repo lives, found by following the ~/.zshrc symlink back here.
+DOTFILES="${${(%):-%x}:A:h:h}"
+
+# --------------------------------------------------------------------------
+# Homebrew and paths
+# --------------------------------------------------------------------------
+[[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+export XDG_CONFIG_HOME="$HOME/.config"
+export PATH="$HOME/.local/bin:$PATH"
+export EDITOR=nvim
+
+# --------------------------------------------------------------------------
+# oh-my-zsh
+# --------------------------------------------------------------------------
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+COMPLETION_WAITING_DOTS="true"
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+fpath+="${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src"
+source "$ZSH/oh-my-zsh.sh"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#808080'
+
+# --------------------------------------------------------------------------
+# Vi mode, history search, fzf
+# --------------------------------------------------------------------------
+bindkey -v
+bindkey '^R' history-incremental-search-backward
+command -v fzf >/dev/null && source <(fzf --zsh)
+
+# --------------------------------------------------------------------------
+# Aliases and functions
+# --------------------------------------------------------------------------
+source "$DOTFILES/zsh/aliases.zsh"
+source "$DOTFILES/zsh/functions.zsh"
+
+# --------------------------------------------------------------------------
+# Machine-only files, never committed
+# --------------------------------------------------------------------------
+[[ -f ~/.secrets.zsh ]] && source ~/.secrets.zsh
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
