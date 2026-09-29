@@ -167,6 +167,9 @@ ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 clone_once zsh-users/zsh-autosuggestions     "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
 clone_once zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 clone_once zsh-users/zsh-completions         "$ZSH_CUSTOM/plugins/zsh-completions"
+clone_once romkatv/powerlevel10k              "$ZSH_CUSTOM/themes/powerlevel10k"
+# your saved prompt look, once zsh/p10k.zsh has been committed
+[[ -f "$DOTFILES/zsh/p10k.zsh" ]] && link "$DOTFILES/zsh/p10k.zsh" "$HOME/.p10k.zsh"
 
 # --------------------------------------------------------------------------
 step "tmux plugins"

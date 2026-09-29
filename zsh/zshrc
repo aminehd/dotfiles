@@ -1,3 +1,8 @@
+# powerlevel10k instant prompt: keep this at the very top
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Where this repo lives, found by following the ~/.zshrc symlink back here.
 DOTFILES="${${(%):-%x}:A:h:h}"
 
@@ -13,12 +18,13 @@ export EDITOR=nvim
 # oh-my-zsh
 # --------------------------------------------------------------------------
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="robbyrussell"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 COMPLETION_WAITING_DOTS="true"
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 fpath+="${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src"
 source "$ZSH/oh-my-zsh.sh"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#808080'
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 # --------------------------------------------------------------------------
 # Vi mode, history search, fzf
