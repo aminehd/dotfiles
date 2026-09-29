@@ -6,14 +6,19 @@ Rocky Linux 8).
 
 ## Install
 
+One command, on the Mac or a Linux dev VM:
+
 ```sh
-git clone https://github.com/aminehd/dotfiles.git ~/dotfiles
-cd ~/dotfiles && ./install.sh
+git clone https://github.com/aminehd/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh
 ```
 
-The script installs everything in the `Brewfile`, sets up oh-my-zsh and its
-plugins, symlinks the configs into place (backing up anything already there),
-and installs the tmux plugins. Running it again is safe.
+The repo is private, so git asks for a login: username `aminehd`, and for the
+password a GitHub token (Settings, Developer settings, Personal access tokens,
+Fine-grained: access to this repo only, Contents read-only).
+
+The script installs the tools, sets up oh-my-zsh and its plugins, symlinks the
+configs into place (backing up anything already there), and installs the tmux
+plugins. Running it again is safe.
 
 **On the Mac** it uses Homebrew, which needs admin rights once. If Homebrew is
 missing, the script prints the command and stops.
