@@ -17,7 +17,7 @@ vf() {
   [[ -n "$file" ]] && nvim "$file"
 }
 
-# vt: open nvim with the file tree revealed
+# vt: open nvim with the file tree open
 vt() {
-  nvim "${1:-.}" -c "Neotree reveal"
+  nvim "${1:-.}" -c "lua Snacks.explorer()"
 }
