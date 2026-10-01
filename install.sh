@@ -139,6 +139,8 @@ linux_tools() {
   linux_tool kubectx ahmetb/kubectx        "kubectx_.*_linux_$LG_ARCH\.tar\.gz$"
   linux_tool kubens  ahmetb/kubectx        "kubens_.*_linux_$LG_ARCH\.tar\.gz$"
   linux_tool stern   stern/stern           "stern_.*_linux_$GO_ARCH\.tar\.gz$"
+  linux_tool lfk     janosmiko/lfk         "lfk_.*_linux_$GO_ARCH\.tar\.gz$"
+  linux_tool lazydocker jesseduffield/lazydocker "lazydocker_.*_linux_$LG_ARCH\.tar\.gz$"
   linux_kubectl
   linux_helm
 
