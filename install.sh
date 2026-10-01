@@ -97,6 +97,22 @@ linux_nvim() {
   echo "  nvim: no build runs on this machine"
 }
 
+linux_kubectl() {
+  local version
+  version="$(curl -fsSL https://dl.k8s.io/release/stable.txt)"
+  curl -fsSL -o "$BIN/kubectl" "https://dl.k8s.io/release/$version/bin/linux/$GO_ARCH/kubectl"
+  chmod 755 "$BIN/kubectl"
+  echo "  kubectl  $version"
+}
+
+linux_helm() {
+  local tag dir
+  tag="$(curl -fsSL https://api.github.com/repos/helm/helm/releases/latest | grep -m1 '"tag_name"' | cut -d'"' -f4)"
+  dir="$(download "https://get.helm.sh/helm-$tag-linux-$GO_ARCH.tar.gz")"
+  install -m 755 "$dir/linux-$GO_ARCH/helm" "$BIN/helm"
+  echo "  helm  $tag"
+}
+
 linux_tools() {
   step "Tools into ~/.local/bin"
   mkdir -p "$BIN"
@@ -117,6 +133,14 @@ linux_tools() {
   linux_tool yazi    sxyazi/yazi           "yazi-$musl\.zip$"       "yazi-$gnu\.zip$"
   linux_tool gh      cli/cli               "linux_$GO_ARCH\.tar\.gz$"
   linux_tool tmux    mjakob-gh/build-static-tmux "tmux\.linux-$GO_ARCH\.stripped\.gz$"
+
+  # kubernetes
+  linux_tool k9s     derailed/k9s          "k9s_linux_$GO_ARCH\.tar\.gz$"
+  linux_tool kubectx ahmetb/kubectx        "kubectx_.*_linux_$LG_ARCH\.tar\.gz$"
+  linux_tool kubens  ahmetb/kubectx        "kubens_.*_linux_$LG_ARCH\.tar\.gz$"
+  linux_tool stern   stern/stern           "stern_.*_linux_$GO_ARCH\.tar\.gz$"
+  linux_kubectl
+  linux_helm
 
   step "zsh"
   if ! command -v zsh >/dev/null 2>&1; then
@@ -155,6 +179,8 @@ link "$DOTFILES/tmux/tmux.conf" "$HOME/.config/tmux/tmux.conf"
 link "$DOTFILES/nvim"           "$HOME/.config/nvim"
 link "$DOTFILES/git/gitconfig"  "$HOME/.gitconfig"
 link "$DOTFILES/git/ignore"     "$HOME/.config/git/ignore"
+link "$DOTFILES/k9s/aliases.yaml" "$HOME/.config/k9s/aliases.yaml"
+link "$DOTFILES/k9s/plugins.yaml" "$HOME/.config/k9s/plugins.yaml"
 
 # --------------------------------------------------------------------------
 step "oh-my-zsh and its plugins"

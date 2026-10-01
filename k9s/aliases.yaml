@@ -1,0 +1,14 @@
+aliases:
+  dp: deployments
+  rs: replicasets
+  svc: services
+  cm: configmaps
+  ep: endpointslices
+  sec: v1/secrets
+  jo: jobs
+  crd: customresourcedefinitions
+  cr: clusterroles
+  crb: clusterrolebindings
+  ro: roles
+  rb: rolebindings
+  np: networkpolicies

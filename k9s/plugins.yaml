@@ -1,0 +1,18 @@
+plugins:
+  # Shift-L on a pod or a deployment: live logs from every matching pod
+  stern:
+    shortCut: Shift-L
+    description: "Logs (stern)"
+    scopes:
+      - pods
+      - deployments
+    command: stern
+    background: false
+    args:
+      - --tail
+      - "50"
+      - $NAME
+      - -n
+      - $NAMESPACE
+      - --context
+      - $CONTEXT
