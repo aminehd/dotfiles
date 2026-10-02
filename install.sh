@@ -107,7 +107,11 @@ linux_kubectl() {
 
 linux_helm() {
   local tag dir
-  tag="$(curl -fsSL https://api.github.com/repos/helm/helm/releases/latest | grep -m1 '"tag_name"' | cut -d'"' -f4)"
+  # Read the whole reply first: grep -m1 on a live curl pipe closes it early,
+  # curl fails with "Failed writing body", and pipefail stops the script.
+  local json
+  json="$(curl -fsSL https://api.github.com/repos/helm/helm/releases/latest)"
+  tag="$(grep -m1 '"tag_name"' <<<"$json" | cut -d'"' -f4)"
   dir="$(download "https://get.helm.sh/helm-$tag-linux-$GO_ARCH.tar.gz")"
   install -m 755 "$dir/linux-$GO_ARCH/helm" "$BIN/helm"
   echo "  helm  $tag"
