@@ -9,7 +9,7 @@ Rocky Linux 8).
 One command, on the Mac or a Linux dev VM:
 
 ```sh
-git clone https://github.com/aminehd/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh
+git clone git@github.com:aminehd/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh
 ```
 
 The repo is private, so git asks for a login: username `aminehd`, and for the
