@@ -126,7 +126,21 @@ linux_helm() {
   echo "  helm  $tag"
 }
 
+# Frees space: leftovers of old runs, and the extras when FULL is not set.
+cleanup() {
+  step "Clean up"
+  find /tmp -maxdepth 1 -name 'tmp.*' -user "$(id -un)" -exec rm -rf {} + 2>/dev/null || true
+  if [[ "${FULL:-0}" != 1 ]]; then
+    rm -f "$BIN"/{yazi,ya,gh,stern,lazydocker}
+  fi
+  rm -rf "$HOME/.cache/pip" "$HOME/.npm/_cacache" "$HOME/.cache/go-build"
+  echo "  free in home: $(df -h "$HOME" | awk 'NR==2 {print $4}'), in /tmp: $(df -h /tmp | awk 'NR==2 {print $4}')"
+  echo "  biggest folders in home:"
+  du -sh "$HOME"/.[!.]* "$HOME"/* 2>/dev/null | sort -rh | head -5 | sed 's/^/    /'
+}
+
 linux_tools() {
+  cleanup
   step "Tools into ~/.local/bin"
   mkdir -p "$BIN"
   export PATH="$BIN:$PATH"
@@ -143,19 +157,23 @@ linux_tools() {
   linux_tool fd      sharkdp/fd            "$musl\.tar\.gz$"       "$gnu\.tar\.gz$"
   linux_tool bat     sharkdp/bat           "$musl\.tar\.gz$"       "$gnu\.tar\.gz$"
   linux_tool rg      BurntSushi/ripgrep    "$musl\.tar\.gz$"       "$gnu\.tar\.gz$"
-  linux_tool yazi    sxyazi/yazi           "yazi-$musl\.zip$"       "yazi-$gnu\.zip$"
-  linux_tool gh      cli/cli               "linux_$GO_ARCH\.tar\.gz$"
   linux_tool tmux    mjakob-gh/build-static-tmux "tmux\.linux-$GO_ARCH\.stripped\.gz$"
 
   # kubernetes
   linux_tool k9s     derailed/k9s          "k9s_linux_$GO_ARCH\.tar\.gz$"
   linux_tool kubectx ahmetb/kubectx        "kubectx_.*_linux_$LG_ARCH\.tar\.gz$"
   linux_tool kubens  ahmetb/kubectx        "kubens_.*_linux_$LG_ARCH\.tar\.gz$"
-  linux_tool stern   stern/stern           "stern_.*_linux_$GO_ARCH\.tar\.gz$"
   linux_tool lfk     janosmiko/lfk         "lfk_.*_linux_$GO_ARCH\.tar\.gz$"
-  linux_tool lazydocker jesseduffield/lazydocker "lazydocker_.*_linux_$LG_ARCH\.tar\.gz$"
   linux_kubectl
   linux_helm
+
+  # Extras, only with FULL=1 ./install.sh (they need about 150 MB more)
+  if [[ "${FULL:-0}" == 1 ]]; then
+    linux_tool yazi  sxyazi/yazi  "yazi-$musl\.zip$"  "yazi-$gnu\.zip$"
+    linux_tool gh    cli/cli      "linux_$GO_ARCH\.tar\.gz$"
+    linux_tool stern stern/stern  "stern_.*_linux_$GO_ARCH\.tar\.gz$"
+    linux_tool lazydocker jesseduffield/lazydocker "lazydocker_.*_linux_$LG_ARCH\.tar\.gz$"
+  fi
 
   step "zsh"
   if ! command -v zsh >/dev/null 2>&1; then
@@ -179,6 +197,11 @@ BASHRC
     echo "  interactive bash now hands over to zsh"
   fi
 }
+
+if [[ "${1:-}" == clean ]]; then
+  cleanup
+  exit 0
+fi
 
 case "$(uname -s)" in
   Darwin) mac_tools ;;

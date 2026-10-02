@@ -23,11 +23,19 @@ plugins. Running it again is safe.
 **On the Mac** it uses Homebrew, which needs admin rights once. If Homebrew is
 missing, the script prints the command and stops.
 
-**On Linux** it needs no sudo. Every tool is downloaded into `~/.local/bin`
+**On Linux** it installs the core tools only: nvim, lazygit, fzf, fd, bat,
+ripgrep, tmux, kubectl, helm, k9s, kubectx, kubens and lfk. For the extras
+(yazi, gh, stern, lazydocker, about 150 MB more), run `FULL=1 ./install.sh`.
+
+Low on disk? `./install.sh clean` removes leftovers of old runs, the extras,
+and the pip/npm/go caches, then shows free space and the five biggest folders
+in your home. A normal Linux run does this clean up first.
+
+It needs no sudo. Every tool is downloaded into `~/.local/bin`
 (Neovim into `~/.local/opt/nvim`), because the distro versions on Rocky 8 are
 too old: tmux there is 2.7 and this config needs 3.2 or newer.
 
-- Rust tools (fd, bat, ripgrep, yazi) use their musl builds, which run on old
+- Rust tools (fd, bat, ripgrep, and yazi with FULL=1) use their musl builds, which run on old
   glibc. Rocky 8 has glibc 2.28.
 - Neovim's main build needs glibc 2.34, so when it will not start the script
   switches to the `neovim-releases` build, which needs 2.17.
@@ -59,7 +67,7 @@ too old: tmux there is 2.7 and this config needs 3.2 or newer.
 | `vi`, `vim` | nvim |
 | `vf` | fuzzy-find a file and open it in nvim |
 | `vt` | nvim with the file tree open |
-| `y` | yazi, and cd to where you quit |
+| `y` | yazi, and cd to where you quit (FULL=1 on Linux) |
 | `Ctrl-R` | fuzzy history search (fzf) |
 
 Not included: terminal font and colours.
