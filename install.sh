@@ -49,10 +49,19 @@ asset_url() {
     | grep -iE "$2" | head -1 || true
 }
 
+# Downloads go under ~/.cache, not /tmp: /tmp is small or full on some VMs.
+# The whole folder is removed when the script ends, even on failure.
+WORK="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-install"
+rm -rf "$WORK" && mkdir -p "$WORK"
+trap 'rm -rf "$WORK"' EXIT
+
 download() {
   local url="$1" dir
-  dir="$(mktemp -d)"
-  curl -fsSL "$url" -o "$dir/pkg"
+  dir="$(mktemp -d "$WORK/dl.XXXXXX")"
+  if ! curl -fsSL "$url" -o "$dir/pkg"; then
+    echo "  download failed: $url (is the disk full? try: df -h ~)" >&2
+    return 1
+  fi
   mkdir -p "$dir/x"
   case "$url" in
     *.zip)    unzip -q "$dir/pkg" -d "$dir/x" ;;
