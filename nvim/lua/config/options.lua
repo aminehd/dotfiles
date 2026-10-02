@@ -4,3 +4,7 @@
 
 vim.opt.number = true
 vim.opt.relativenumber = true
+
+-- Root = the folder nvim was opened in, not the git repo of the current file.
+-- Without this, <leader><space> only searches the repo of the open buffer.
+vim.g.root_spec = { "cwd" }

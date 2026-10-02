@@ -38,6 +38,7 @@ command -v fzf >/dev/null && source <(fzf --zsh)
 # --------------------------------------------------------------------------
 source "$DOTFILES/zsh/aliases.zsh"
 source "$DOTFILES/zsh/functions.zsh"
+source "$DOTFILES/zsh/kube.zsh"
 
 # --------------------------------------------------------------------------
 # Machine-only files, never committed
