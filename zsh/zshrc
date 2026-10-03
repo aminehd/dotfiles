@@ -13,6 +13,9 @@ DOTFILES="${${(%):-%x}:A:h:h}"
 export XDG_CONFIG_HOME="$HOME/.config"
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR=nvim
+# ssh does not pass COLORTERM along, so on a VM it is empty and apps assume 256 colours.
+# iTerm2 and modern terminals do 24-bit colour.
+export COLORTERM="${COLORTERM:-truecolor}"
 
 # --------------------------------------------------------------------------
 # oh-my-zsh

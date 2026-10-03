@@ -221,7 +221,7 @@ link "$DOTFILES/k9s/aliases.yaml" "$HOME/.config/k9s/aliases.yaml"
 link "$DOTFILES/k9s/plugins.yaml" "$HOME/.config/k9s/plugins.yaml"
 # opencode: rules, agents, slash commands and skills. The model and provider
 # settings (opencode.json) are left to the company setup.
-for f in AGENTS.md agents commands skills; do
+for f in AGENTS.md tui.json agents commands skills; do
   link "$DOTFILES/opencode/$f" "$HOME/.config/opencode/$f"
 done
 

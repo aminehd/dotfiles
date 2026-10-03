@@ -77,6 +77,8 @@ Not included: terminal font and colours.
 `opencode/` is linked into `~/.config/opencode/` (the model settings stay with the company setup):
 
 - `AGENTS.md`: how to work with me, loaded in every session
+- `tui.json`: tokyonight theme (matches nvim), smooth scrolling, thin cursor. Needs 24-bit colour:
+  zshrc and tmux.conf set `COLORTERM=truecolor`, because ssh does not pass it to the VM
 - agents (Tab to switch): `k8s` read-only cluster investigator, `teach` explains top-down,
   `review` reviews the diff
 - commands: `/kstatus`, `/kwhy <kind>/<name> -n <ns>`, `/kwho ...`, `/explain <thing>`,
