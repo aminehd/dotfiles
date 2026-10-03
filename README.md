@@ -71,3 +71,15 @@ too old: tmux there is 2.7 and this config needs 3.2 or newer.
 | `Ctrl-R` | fuzzy history search (fzf) |
 
 Not included: terminal font and colours.
+
+## opencode
+
+`opencode/` is linked into `~/.config/opencode/` (the model settings stay with the company setup):
+
+- `AGENTS.md`: how to work with me, loaded in every session
+- agents (Tab to switch): `k8s` read-only cluster investigator, `teach` explains top-down,
+  `review` reviews the diff
+- commands: `/kstatus`, `/kwhy <kind>/<name> -n <ns>`, `/kwho ...`, `/explain <thing>`,
+  `/chart <path>`, `/review`, `/commit`
+- skills: k8s-inspect, trace-k8s-object, read-helm-chart, read-k8s-controller, deploy-verify,
+  debug-systematically, tdd, explain-top-down, git-commit, verify-before-done

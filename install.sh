@@ -219,7 +219,11 @@ link "$DOTFILES/git/gitconfig"  "$HOME/.gitconfig"
 link "$DOTFILES/git/ignore"     "$HOME/.config/git/ignore"
 link "$DOTFILES/k9s/aliases.yaml" "$HOME/.config/k9s/aliases.yaml"
 link "$DOTFILES/k9s/plugins.yaml" "$HOME/.config/k9s/plugins.yaml"
-link "$DOTFILES/opencode/skills" "$HOME/.config/opencode/skills"
+# opencode: rules, agents, slash commands and skills. The model and provider
+# settings (opencode.json) are left to the company setup.
+for f in AGENTS.md agents commands skills; do
+  link "$DOTFILES/opencode/$f" "$HOME/.config/opencode/$f"
+done
 
 # --------------------------------------------------------------------------
 step "oh-my-zsh and its plugins"
