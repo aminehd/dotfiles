@@ -13,6 +13,7 @@ DOTFILES="${${(%):-%x}:A:h:h}"
 export XDG_CONFIG_HOME="$HOME/.config"
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR=nvim
+export COLORTERM="${COLORTERM:-truecolor}"
 
 # --------------------------------------------------------------------------
 # oh-my-zsh

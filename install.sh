@@ -167,6 +167,16 @@ linux_tools() {
   linux_kubectl
   linux_helm
 
+  # opencode: only when missing, it is about 150 MB
+  if ! command -v opencode >/dev/null 2>&1; then
+    local oc_arch=x64; [[ "$GO_ARCH" == arm64 ]] && oc_arch=arm64
+    linux_tool opencode anomalyco/opencode "opencode-linux-$oc_arch-musl\.tar\.gz$" "opencode-linux-$oc_arch\.tar\.gz$"
+  fi
+  # Go language server, so opencode and nvim see compile errors
+  if command -v go >/dev/null 2>&1 && ! command -v gopls >/dev/null 2>&1; then
+    GOBIN="$BIN" go install golang.org/x/tools/gopls@latest && echo "  gopls installed"
+  fi
+
   # Extras, only with FULL=1 ./install.sh (they need about 150 MB more)
   if [[ "${FULL:-0}" == 1 ]]; then
     linux_tool yazi  sxyazi/yazi  "yazi-$musl\.zip$"  "yazi-$gnu\.zip$"
@@ -219,6 +229,10 @@ link "$DOTFILES/git/gitconfig"  "$HOME/.gitconfig"
 link "$DOTFILES/git/ignore"     "$HOME/.config/git/ignore"
 link "$DOTFILES/k9s/aliases.yaml" "$HOME/.config/k9s/aliases.yaml"
 link "$DOTFILES/k9s/plugins.yaml" "$HOME/.config/k9s/plugins.yaml"
+link "$DOTFILES/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
+link "$DOTFILES/opencode/tui.json"      "$HOME/.config/opencode/tui.json"
+link "$DOTFILES/opencode/AGENTS.md"     "$HOME/.config/opencode/AGENTS.md"
+link "$DOTFILES/opencode/skills"        "$HOME/.config/opencode/skills"
 
 # --------------------------------------------------------------------------
 step "oh-my-zsh and its plugins"
