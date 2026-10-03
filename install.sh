@@ -219,6 +219,7 @@ link "$DOTFILES/git/gitconfig"  "$HOME/.gitconfig"
 link "$DOTFILES/git/ignore"     "$HOME/.config/git/ignore"
 link "$DOTFILES/k9s/aliases.yaml" "$HOME/.config/k9s/aliases.yaml"
 link "$DOTFILES/k9s/plugins.yaml" "$HOME/.config/k9s/plugins.yaml"
+link "$DOTFILES/opencode/skills" "$HOME/.config/opencode/skills"
 
 # --------------------------------------------------------------------------
 step "oh-my-zsh and its plugins"
