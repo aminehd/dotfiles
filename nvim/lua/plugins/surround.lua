@@ -15,6 +15,13 @@ return {
         highlight = "gsh",
         update_n_lines = "gsn",
       },
+      -- gsaiwH -> {{ word }}  (Helm/Go templates), gsdH removes it
+      custom_surroundings = {
+        H = {
+          input = { "{{%s*().-()%s*}}" },
+          output = { left = "{{ ", right = " }}" },
+        },
+      },
     },
   },
 }
