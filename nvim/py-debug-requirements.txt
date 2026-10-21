@@ -1,0 +1,8 @@
+# Python debugging / learning stack for nvim (iron.nvim REPL, nvim-dap, pudb, snoop).
+# Install into whatever Python nvim uses as its host (init.lua sets python3_host_prog):
+#   <that-python> -m pip install -r py-debug-requirements.txt
+# Here that's the ClawClaude venv: /home/amineh/WorkSpace/ClawClaude/.venv
+debugpy        # nvim-dap adapter (breakpoints / stepping inside nvim)  -> dap-cp.lua
+ipython        # the REPL iron.nvim drives                              -> iron.lua
+pudb           # full-screen TUI debugger (<leader>dP, or :Debug / F6)
+snoop          # @snoop line-by-line tracer (<leader>dS)

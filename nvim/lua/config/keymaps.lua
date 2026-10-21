@@ -50,3 +50,38 @@ vim.api.nvim_create_autocmd("TermClose", {
     end
   end,
 })
+
+-- ── Debug extras: general pudb + snoop (work on ANY file, not just the CP harness) ──
+local vpy = "/home/amineh/WorkSpace/ClawClaude/.venv/bin/python3"
+
+-- <leader>dP : run the current file in PuDB (full-screen TUI debugger) in a split.
+-- Use this for practice/ and design-style files that aren't wired to `cp`.
+vim.keymap.set("n", "<leader>dP", function()
+  vim.cmd("write")
+  local f = vim.fn.fnameescape(vim.fn.expand("%:p"))
+  vim.cmd("botright split | resize 20 | terminal " .. vpy .. " -m pudb " .. f)
+  vim.cmd("startinsert")
+end, { desc = "Debug: run file in PuDB (TUI)" })
+
+-- <leader>dS : drop a @snoop tracer above the current line (auto-adds `import snoop`).
+-- Put the cursor on a `def ...:` line, hit it, run the file — every line prints
+-- with how each variable changed. Zero stepping, just read the execution.
+vim.keymap.set("n", "<leader>dS", function()
+  local buf = 0
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+  local indent = vim.api.nvim_get_current_line():match("^%s*") or ""
+  -- decorator just above the current line
+  vim.api.nvim_buf_set_lines(buf, row - 1, row - 1, false, { indent .. "@snoop" })
+  -- ensure `import snoop` near the top (scan first 40 lines)
+  local head = vim.api.nvim_buf_get_lines(buf, 0, 40, false)
+  local has = false
+  for _, l in ipairs(head) do
+    if l:match("^%s*import%s+snoop") then
+      has = true
+      break
+    end
+  end
+  if not has then
+    vim.api.nvim_buf_set_lines(buf, 0, 0, false, { "import snoop" })
+  end
+end, { desc = "Debug: insert @snoop tracer" })
