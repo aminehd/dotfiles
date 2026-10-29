@@ -28,7 +28,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 COMPLETION_WAITING_DOTS="true"
 plugins=(git kubectl zsh-autosuggestions zsh-syntax-highlighting)
 fpath+="${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src"
-source "$ZSH/oh-my-zsh.sh"
+[[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#808080'
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
@@ -43,6 +43,7 @@ command -v fzf >/dev/null && source <(fzf --zsh)
 # Aliases and functions
 # --------------------------------------------------------------------------
 source "$DOTFILES/zsh/aliases.zsh"
+source "$DOTFILES/zsh/git.zsh"
 source "$DOTFILES/zsh/functions.zsh"
 source "$DOTFILES/zsh/kube.zsh"
 
