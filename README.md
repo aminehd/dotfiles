@@ -43,6 +43,41 @@ too old: tmux there is 2.7 and this config needs 3.2 or newer.
 - If zsh is missing and there is no sudo, a standalone zsh is installed into
   `~/.local` with `romkatv/zsh-bin`, and interactive bash hands over to it.
 
+## Treesitter on old glibc (Rocky 8)
+
+LazyVim's treesitter needs the `tree-sitter` CLI 0.26.1 or newer to build
+language parsers. Without it, Go files get no `]a` / `]f` / `]c` jumps (next
+parameter / function / class), and `]a` falls back to Neovim's `:next`.
+
+The prebuilt Linux binaries need glibc 2.39, and Rocky 8 has 2.28. Build it on
+the VM instead, so it links against the VM's own glibc. No sudo needed; GCC 8.5
+is enough:
+
+```sh
+# Rust toolchain into ~/.cargo (about 2 minutes)
+curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+source ~/.cargo/env
+
+# build tree-sitter (about 5 minutes); temp files in ~/.cache because /tmp is small on VMs
+mkdir -p ~/.cache/tmp
+TMPDIR=~/.cache/tmp cargo install --locked tree-sitter-cli
+
+tree-sitter --version      # 0.26.x or newer
+```
+
+Then in nvim: `:TSInstall go`, restart, open a `.go` file and press `]`. The
+`a` line should say "Next Parameter Start". Until then, `g]a` / `g[a`
+(mini.ai) jump between arguments without treesitter.
+
+On a machine with glibc 2.39 or newer, the prebuilt binary is enough:
+
+```sh
+curl -fsSL https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz \
+  | gunzip > ~/.local/bin/tree-sitter && chmod +x ~/.local/bin/tree-sitter
+```
+
+Check with `ldd --version | head -1`.
+
 ## What goes where
 
 | repo | linked to |
@@ -69,6 +104,7 @@ too old: tmux there is 2.7 and this config needs 3.2 or newer.
 | `vt` | nvim with the file tree open |
 | `y` | yazi, and cd to where you quit (FULL=1 on Linux) |
 | `Ctrl-R` | fuzzy history search (fzf) |
+| `ga`, `gA`, `gc`, `gst`, `gp`... | git aliases from `zsh/git.zsh` (same names as oh-my-zsh, work without it) |
 
 Not included: terminal font and colours.
 
