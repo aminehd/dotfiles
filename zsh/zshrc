@@ -12,6 +12,8 @@ DOTFILES="${${(%):-%x}:A:h:h}"
 [[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
 export XDG_CONFIG_HOME="$HOME/.config"
 export PATH="$HOME/.local/bin:$PATH"
+# cargo-built tools (tree-sitter on old-glibc VMs, see fix-treesitter.sh)
+[[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
 export EDITOR=nvim
 # ssh does not pass COLORTERM along, so on a VM it is empty and apps assume 256 colours.
 # iTerm2 and modern terminals do 24-bit colour.

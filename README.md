@@ -49,9 +49,20 @@ LazyVim's treesitter needs the `tree-sitter` CLI 0.26.1 or newer to build
 language parsers. Without it, Go files get no `]a` / `]f` / `]c` jumps (next
 parameter / function / class), and `]a` falls back to Neovim's `:next`.
 
-The prebuilt Linux binaries need glibc 2.39, and Rocky 8 has 2.28. Build it on
-the VM instead, so it links against the VM's own glibc. No sudo needed; GCC 8.5
-is enough:
+The prebuilt Linux binaries need glibc 2.39, and Rocky 8 has 2.28. LazyVim's
+fallback, a Mason download, fails with `GLIBC_2.35 not found`.
+
+**One command does all of it:**
+
+```sh
+~/dotfiles/fix-treesitter.sh
+```
+
+It removes the Mason copy, builds the CLI with cargo, checks PATH, installs the
+Go parser and checks that it loads. Safe to run again.
+
+By hand, build it on the VM so it links against the VM's own glibc. No sudo
+needed; GCC 8.5 is enough:
 
 ```sh
 # Rust toolchain into ~/.cargo (about 2 minutes)
