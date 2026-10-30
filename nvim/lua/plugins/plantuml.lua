@@ -71,7 +71,8 @@ end
 
 function M.show_image(png)
   if vim.env.TMUX and vim.fn.executable("imgcat") == 1 then
-    vim.fn.system({ "tmux", "new-window", "-n", "diagram", "imgcat " .. vim.fn.shellescape(png) .. "; read -rsn1" })
+    -- bash, not the tmux default shell: zsh's read has no -n, so the window would close at once
+    vim.fn.system({ "tmux", "new-window", "-n", "diagram", "bash", "-c", 'imgcat "$1"; read -rsn1', "_", png })
   else
     vim.ui.open(png)
   end
