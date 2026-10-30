@@ -89,6 +89,27 @@ curl -fsSL https://github.com/tree-sitter/tree-sitter/releases/latest/download/t
 
 Check with `ldd --version | head -1`.
 
+## PlantUML diagrams in nvim
+
+```sh
+~/dotfiles/setup-plantuml.sh
+```
+
+Installs `plantuml` into `~/.local/bin` (the native build where glibc is 2.34 or
+newer, otherwise the Java build plus a Java 21 runtime in `~/.local/opt`) and
+iTerm2's `imgcat`. Diagrams render on the machine itself, never through a
+plantuml server. No graphviz needed: the built-in smetana layout is used when
+`dot` is missing.
+
+| in nvim | does |
+| --- | --- |
+| save a `.puml` | writes `<name>.png` next to it |
+| `<space>Pv` | shows the diagram under the cursor (a `.puml` file, or a ```` ```plantuml ```` block in markdown) in a new tmux window; any key closes it |
+| `<space>Pt` | the same diagram as text in a split (sequence diagrams only) |
+
+The image is an iTerm2 inline image, so tmux needs `allow-passthrough on`
+(tmux.conf sets it; run `tmux source ~/.config/tmux/tmux.conf` once).
+
 ## What goes where
 
 | repo | linked to |
