@@ -1,0 +1,20 @@
+# Keep big, generated or vendored files out of the agent's context.
+# .gitignore is already ignored by Cursor, this is on top of it.
+vendor/
+node_modules/
+bin/
+dist/
+build/
+_output/
+*.lock
+go.sum
+package-lock.json
+*.min.js
+*.pb.go
+zz_generated*.go
+**/crds/*.yaml
+config/crd/bases/
+charts/*/charts/
+*.tgz
+*.log
+coverage.out

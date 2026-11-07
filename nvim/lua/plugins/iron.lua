@@ -1,6 +1,6 @@
 -- iron.nvim: a live Python REPL inside nvim. Send a line or a visual selection
 -- to a running IPython and watch it evaluate — great for poking at a data
--- structure interactively instead of print-debugging. Uses the ClawClaude venv
+-- structure interactively instead of print-debugging. Uses the $PY_VENV venv
 -- (so snoop/pudb/numpy etc. are all there). Keymaps live under <leader>r (REPL).
 return {
   "Vigemus/iron.nvim",
@@ -15,7 +15,7 @@ return {
   config = function()
     local iron = require("iron.core")
     local view = require("iron.view")
-    local venv = "/home/amineh/WorkSpace/ClawClaude/.venv/bin"
+    local venv = vim.g.py_venv .. "/bin"
 
     iron.setup({
       config = {

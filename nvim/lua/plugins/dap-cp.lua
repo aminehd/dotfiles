@@ -17,8 +17,8 @@ return {
       dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
       dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
 
-      local venv = "/home/amineh/WorkSpace/ClawClaude/.venv/bin/python3"
-      local cp_root = "/home/amineh/WorkSpace/ClawClaude/cp-prep"
+      local venv = vim.g.py_venv .. "/bin/python3"
+      local cp_root = vim.g.cp_root
 
       dap.adapters.python = {
         type = "executable",

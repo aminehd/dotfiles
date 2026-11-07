@@ -29,7 +29,7 @@ return {
     build = ":UpdateRemotePlugins",
     dependencies = { "3rd/image.nvim" },
     init = function()
-      vim.g.python3_host_prog    = "/home/amineh/WorkSpace/ClawClaude/.venv/bin/python3"
+      vim.g.python3_host_prog    = vim.g.py_venv .. "/bin/python3"
       vim.g.molten_image_provider = "image.nvim"
       vim.g.molten_output_win_max_height = 30
       vim.g.molten_auto_open_output = true

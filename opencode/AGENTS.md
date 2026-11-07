@@ -26,6 +26,20 @@ while I work, so I want to understand what you do, not just get the result.
 - Commits are mine: no AI attribution, no Co-Authored-By trailers.
 - Work code stays in work repos. Never push it to a personal GitHub.
 
+## Keep output small
+- Git: `git status -s` and `git diff --stat` first, then the full diff only for the files you need.
+  `git log --oneline -n 20`, never `git log -p` or `--all`. `git show <sha> --stat` before `git show <sha>`.
+- Code: search with `rg -n` or Serena's symbol tools, then read only the lines you need.
+  Never read a whole test file; they are huge.
+- YAML: `yq '.spec.template' file.yaml` instead of reading the whole file.
+  Cluster objects: `kubectl get ... -o yaml | kubectl neat`.
+- For "where is X / who calls Y", ask the `explore` subagent instead of searching yourself.
+
+## Trying code in a REPL
+- To check how a Go type or snippet behaves, start `yaegi` with `pty_spawn`, send lines with
+  `pty_write`, read with `pty_read`. Show me what you sent and what came back.
+- Python: `python3 -i` the same way. Kill the session with `pty_kill` when done.
+
 ## Skills you have
 Load the matching skill when the task fits: k8s-inspect, trace-k8s-object, read-helm-chart,
 read-k8s-controller, deploy-verify, debug-systematically, tdd, explain-top-down,

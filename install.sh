@@ -114,6 +114,15 @@ linux_kubectl() {
   echo "  kubectl  $version"
 }
 
+# yq ships a bare binary named yq_linux_<arch>, not a yq inside an archive
+linux_yq() {
+  local url
+  url="$(asset_url mikefarah/yq "/yq_linux_$GO_ARCH$")"
+  [[ -n "$url" ]] || { echo "  yq: no download matched, skipped"; return 0; }
+  curl -fsSL "$url" -o "$BIN/yq" && chmod 755 "$BIN/yq"
+  echo "  yq  $("$BIN/yq" --version 2>/dev/null)"
+}
+
 linux_helm() {
   local tag dir
   # Read the whole reply first: grep -m1 on a live curl pipe closes it early,
@@ -164,8 +173,14 @@ linux_tools() {
   linux_tool kubectx ahmetb/kubectx        "kubectx_.*_linux_$LG_ARCH\.tar\.gz$"
   linux_tool kubens  ahmetb/kubectx        "kubens_.*_linux_$LG_ARCH\.tar\.gz$"
   linux_tool lfk     janosmiko/lfk         "lfk_.*_linux_$GO_ARCH\.tar\.gz$"
+  linux_tool kubeconform yannh/kubeconform "kubeconform-linux-$GO_ARCH\.tar\.gz$"
+  linux_tool kubectl-neat itaysk/kubectl-neat "kubectl-neat_linux_$GO_ARCH\.tar\.gz$"
+  linux_yq
   linux_kubectl
   linux_helm
+
+  # agent helpers: rtk shrinks command output before the agent reads it
+  linux_tool rtk     rtk-ai/rtk            "/rtk-$musl\.tar\.gz$"  "/rtk-$gnu\.tar\.gz$"
 
   # Extras, only with FULL=1 ./install.sh (they need about 150 MB more)
   if [[ "${FULL:-0}" == 1 ]]; then
@@ -220,10 +235,43 @@ link "$DOTFILES/git/ignore"     "$HOME/.config/git/ignore"
 link "$DOTFILES/k9s/aliases.yaml" "$HOME/.config/k9s/aliases.yaml"
 link "$DOTFILES/k9s/plugins.yaml" "$HOME/.config/k9s/plugins.yaml"
 # opencode: rules, agents, slash commands and skills. The model and provider
-# settings (opencode.json) are left to the company setup.
-for f in AGENTS.md tui.json agents commands skills; do
+# settings (opencode.json) are left to the machine's own setup.
+for f in AGENTS.md tui.json agents commands skills plugins; do
   link "$DOTFILES/opencode/$f" "$HOME/.config/opencode/$f"
 done
+
+# Cursor: rtk hook, MCP servers and the same skills as opencode.
+# User rules live in Cursor's settings, not on disk (see README).
+# mcp.json is only linked with WITH_MCP=1, same as Serena below.
+link "$DOTFILES/cursor/hooks.json" "$HOME/.cursor/hooks.json"
+[[ "${WITH_MCP:-0}" == 1 ]] && link "$DOTFILES/cursor/mcp.json" "$HOME/.cursor/mcp.json"
+link "$DOTFILES/opencode/skills" "$HOME/.cursor/skills"
+
+# --------------------------------------------------------------------------
+step "Serena (code search MCP for opencode)"
+# --------------------------------------------------------------------------
+# Serena reads code by symbol through the language servers, so the agent reads
+# one function instead of a whole file. It installs through uv.
+# MCP servers are off until they are allowed: run with WITH_MCP=1 to install it.
+if [[ "${WITH_MCP:-0}" != 1 ]]; then
+  echo "  skipped (WITH_MCP=1 ./install.sh to install)"
+elif ! command -v uv >/dev/null 2>&1; then
+  curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="$BIN" INSTALLER_NO_MODIFY_PATH=1 sh \
+    || echo "  uv install failed, Serena skipped"
+fi
+if [[ "${WITH_MCP:-0}" == 1 ]] && command -v uv >/dev/null 2>&1 && ! command -v serena >/dev/null 2>&1; then
+  uv tool install -p 3.13 serena-agent || echo "  Serena install failed, opencode runs without it"
+fi
+command -v serena >/dev/null 2>&1 && echo "  serena  $(serena --version 2>/dev/null | head -1)"
+
+# --------------------------------------------------------------------------
+step "yaegi (Go REPL)"
+# --------------------------------------------------------------------------
+# Try Go types and snippets line by line, by hand or by the agent through opencode-pty.
+if command -v go >/dev/null 2>&1 && ! command -v yaegi >/dev/null 2>&1; then
+  go install github.com/traefik/yaegi/cmd/yaegi@latest || echo "  yaegi install failed"
+fi
+command -v yaegi >/dev/null 2>&1 && echo "  yaegi installed" || true
 
 # --------------------------------------------------------------------------
 step "oh-my-zsh and its plugins"

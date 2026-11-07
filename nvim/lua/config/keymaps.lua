@@ -3,7 +3,7 @@
 -- Add any additional keymaps here
 
 -- CP harness: run tests / step through PuDB on the current file
-local cp = "/home/amineh/WorkSpace/ClawClaude/cp-prep/cp"
+local cp = vim.g.cp_root .. "/cp"
 
 -- F5: save + run against all samples (✅/❌ + diff + timing) in a bottom split
 vim.keymap.set("n", "<F5>", function()
@@ -52,16 +52,34 @@ vim.api.nvim_create_autocmd("TermClose", {
 })
 
 -- ── Debug extras: general pudb + snoop (work on ANY file, not just the CP harness) ──
-local vpy = "/home/amineh/WorkSpace/ClawClaude/.venv/bin/python3"
+local vpy = vim.g.py_venv .. "/bin/python3"
 
 -- <leader>dP : run the current file in PuDB (full-screen TUI debugger) in a split.
 -- Use this for practice/ and design-style files that aren't wired to `cp`.
 vim.keymap.set("n", "<leader>dP", function()
   vim.cmd("write")
+  -- kill any pudb panel from a previous run so this is always a fresh start
+  for _, b in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.b[b] and vim.b[b].pudb_term then
+      pcall(vim.api.nvim_buf_delete, b, { force = true })
+    end
+  end
   local f = vim.fn.fnameescape(vim.fn.expand("%:p"))
-  vim.cmd("botright split | resize 20 | terminal " .. vpy .. " -m pudb " .. f)
+  -- full-screen tab: pudb needs the room or its focus/keys misbehave
+  vim.cmd("tabnew | terminal " .. vpy .. " -m pudb " .. f)
+  vim.b.pudb_term = true -- tag it so the next <leader>dP can close it
   vim.cmd("startinsert")
-end, { desc = "Debug: run file in PuDB (TUI)" })
+end, { desc = "Debug: run file in PuDB (fresh, fullscreen)" })
+
+-- <F7> : save + run the current file with the venv python in a bottom panel.
+-- General-purpose (works on practice/ + any file) and has snoop/pudb/etc available.
+-- The panel stays open so you can read the snoop trace; :q closes it.
+vim.keymap.set("n", "<F7>", function()
+  vim.cmd("write")
+  local f = vim.fn.fnameescape(vim.fn.expand("%:p"))
+  vim.cmd("botright 18split | terminal " .. vpy .. " " .. f)
+  vim.cmd("stopinsert") -- land in normal mode so k/j scroll the output
+end, { desc = "Run file (venv) in panel" })
 
 -- <leader>dS : drop a @snoop tracer above the current line (auto-adds `import snoop`).
 -- Put the cursor on a `def ...:` line, hit it, run the file — every line prints

@@ -142,16 +142,36 @@ Not included: terminal font and colours.
 
 ## opencode
 
-`opencode/` is linked into `~/.config/opencode/` (the model settings stay with the company setup):
+`opencode/` is linked into `~/.config/opencode/` (the model settings stay with the machine's own setup):
 
 - `AGENTS.md`: how to work with me, loaded in every session
 - `config.json`: turns on LSP (gopls, yaml, bash...) so opencode sees compile errors. Loaded through
-  `OPENCODE_CONFIG` in zshrc and merged on top of the company `opencode.json`
+  `OPENCODE_CONFIG` in zshrc and merged on top of the machine's own `opencode.json`
+  It also asks before kubectl apply/delete/edit/scale/patch, helm install/upgrade/uninstall and
+  git push. Two MCP servers are set up but off (`"enabled": false`) until MCP is allowed:
+  context7 (current library docs) and Serena (reads code by symbol). `WITH_MCP=1 ./install.sh`
+  installs Serena and links Cursor's mcp.json
+- npm plugins in config.json: `@tarquinen/opencode-dcp` drops old tool output from the context,
+  `opencode-pty` lets the agent drive a REPL (`yaegi` for Go, `python3 -i`)
 - `tui.json`: tokyonight theme (matches nvim), smooth scrolling, thin cursor. Needs 24-bit colour:
-  zshrc and tmux.conf set `COLORTERM=truecolor`, because ssh does not pass it to the VM
+  zshrc and tmux.conf set `COLORTERM=truecolor`, because ssh does not pass it to the VM.
+  `ctrl+x b` hides or shows the right sidebar
 - agents (Tab to switch): `k8s` read-only cluster investigator, `teach` explains top-down,
-  `review` reviews the diff
+  `review` reviews the diff, `explore` fast read-only search subagent (set a cheap `model:` in it)
+- plugins: `rtk.ts` sends shell commands through rtk, so the agent reads short output
 - commands: `/kstatus`, `/kwhy <kind>/<name> -n <ns>`, `/kwho ...`, `/explain <thing>`,
   `/chart <path>`, `/review`, `/commit`
 - skills: k8s-inspect, trace-k8s-object, read-helm-chart, read-k8s-controller, deploy-verify,
   debug-systematically, tdd, explain-top-down, git-commit, verify-before-done
+
+## Cursor
+
+`cursor/` is linked into `~/.cursor/`. It shares the skills and the rules with opencode:
+
+- `hooks.json`: sends shell commands through rtk, like the opencode plugin
+- `mcp.json`: the same context7 and Serena MCP servers, linked only with `WITH_MCP=1`
+- `~/.cursor/skills` links to `opencode/skills`, Cursor reads the same SKILL.md format
+- `cursorignore`: copy it to a repo as `.cursorignore`, or paste it into
+  Settings → Indexing & Docs → Global Cursor Ignore. It keeps vendor, build output, lock files
+  and big generated YAML out of the agent's context
+- User rules are not files in Cursor. Paste `opencode/AGENTS.md` into Settings → Rules → User Rules
