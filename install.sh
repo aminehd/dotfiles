@@ -43,9 +43,25 @@ mac_tools() {
 BIN="$HOME/.local/bin"
 OPT="$HOME/.local/opt"
 
+# GitHub allows 60 API calls an hour without a token, and a shared VM IP runs out
+# fast (curl: 403). With GITHUB_TOKEN set, or gh logged in, the limit is 5000.
+gh_api() {
+  local token="${GITHUB_TOKEN:-}"
+  [[ -z "$token" ]] && command -v gh >/dev/null 2>&1 && token="$(gh auth token 2>/dev/null || true)"
+  if [[ -n "$token" ]]; then
+    curl -fsSL -H "Authorization: Bearer $token" "https://api.github.com/$1"
+  else
+    curl -fsSL "https://api.github.com/$1"
+  fi
+}
+
 asset_url() {
-  curl -fsSL "https://api.github.com/repos/$1/releases/latest" \
-    | grep -o '"browser_download_url": *"[^"]*"' | cut -d'"' -f4 \
+  local json
+  if ! json="$(gh_api "repos/$1/releases/latest")"; then
+    echo "  GitHub API refused $1 (rate limit?), set GITHUB_TOKEN and run again" >&2
+    return 0
+  fi
+  grep -o '"browser_download_url": *"[^"]*"' <<<"$json" | cut -d'"' -f4 \
     | grep -iE "$2" | head -1 || true
 }
 
@@ -108,10 +124,14 @@ linux_nvim() {
 
 linux_kubectl() {
   local version
-  version="$(curl -fsSL https://dl.k8s.io/release/stable.txt)"
-  curl -fsSL -o "$BIN/kubectl" "https://dl.k8s.io/release/$version/bin/linux/$GO_ARCH/kubectl"
-  chmod 755 "$BIN/kubectl"
-  echo "  kubectl  $version"
+  version="$(curl -fsSL https://dl.k8s.io/release/stable.txt)" || { echo "  kubectl: version check failed, skipped"; return 0; }
+  # Download beside it and swap: writing over a kubectl that is running fails (curl: 23).
+  if curl -fsSL -o "$BIN/kubectl.new" "https://dl.k8s.io/release/$version/bin/linux/$GO_ARCH/kubectl"; then
+    chmod 755 "$BIN/kubectl.new" && mv -f "$BIN/kubectl.new" "$BIN/kubectl"
+    echo "  kubectl  $version"
+  else
+    rm -f "$BIN/kubectl.new"; echo "  kubectl: download failed, kept the old one (df -h ~ ?)"
+  fi
 }
 
 # yq ships a bare binary named yq_linux_<arch>, not a yq inside an archive
@@ -119,7 +139,8 @@ linux_yq() {
   local url
   url="$(asset_url mikefarah/yq "/yq_linux_$GO_ARCH$")"
   [[ -n "$url" ]] || { echo "  yq: no download matched, skipped"; return 0; }
-  curl -fsSL "$url" -o "$BIN/yq" && chmod 755 "$BIN/yq"
+  curl -fsSL "$url" -o "$BIN/yq.new" && chmod 755 "$BIN/yq.new" && mv -f "$BIN/yq.new" "$BIN/yq" \
+    || { rm -f "$BIN/yq.new"; echo "  yq: download failed"; return 0; }
   echo "  yq  $("$BIN/yq" --version 2>/dev/null)"
 }
 
@@ -128,7 +149,7 @@ linux_helm() {
   # Read the whole reply first: grep -m1 on a live curl pipe closes it early,
   # curl fails with "Failed writing body", and pipefail stops the script.
   local json
-  json="$(curl -fsSL https://api.github.com/repos/helm/helm/releases/latest)"
+  json="$(gh_api repos/helm/helm/releases/latest)" || { echo "  helm: GitHub API refused, skipped"; return 0; }
   tag="$(grep -m1 '"tag_name"' <<<"$json" | cut -d'"' -f4)"
   dir="$(download "https://get.helm.sh/helm-$tag-linux-$GO_ARCH.tar.gz")"
   install -m 755 "$dir/linux-$GO_ARCH/helm" "$BIN/helm"
