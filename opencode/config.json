@@ -2,8 +2,8 @@
   "$schema": "https://opencode.ai/config.json",
   "lsp": true,
   "plugin": [
-    "@tarquinen/opencode-dcp",
-    "opencode-pty"
+    "@tarquinen/opencode-dcp@3.2.0",
+    "opencode-pty@0.4.0"
   ],
   "permission": {
     "*": "allow",
@@ -18,9 +18,26 @@
       "helm install*": "ask",
       "helm upgrade*": "ask",
       "helm uninstall*": "ask",
-      "git push*": "ask"
+      "git push*": "ask",
+      "git commit*": "ask",
+      "git reset --hard*": "ask",
+      "rm -r*": "ask",
+      "rm -fr*": "ask",
+      "rtk kubectl apply*": "ask",
+      "rtk kubectl delete*": "ask",
+      "rtk kubectl edit*": "ask",
+      "rtk kubectl scale*": "ask",
+      "rtk kubectl patch*": "ask",
+      "rtk helm install*": "ask",
+      "rtk helm upgrade*": "ask",
+      "rtk helm uninstall*": "ask",
+      "rtk git push*": "ask",
+      "rtk git commit*": "ask",
+      "rtk git reset --hard*": "ask",
+      "rtk rm -r*": "ask",
+      "rtk rm -fr*": "ask"
     },
-    "webfetch": "allow",
+    "webfetch": "ask",
     "external_directory": "allow"
   },
   "mcp": {

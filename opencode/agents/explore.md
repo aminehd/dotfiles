@@ -1,8 +1,7 @@
 ---
 description: Fast read-only code search. Finds where something is defined or used and answers in a few lines. Use it for "where is X", "who calls Y", "how is Z wired" before reading files yourself.
 mode: subagent
-# Set a cheap, fast model here, one your provider allows, e.g.
-# model: openrouter/<fast-model>
+# Set the fast model in the machine's own opencode.json: agent.explore.model
 permission:
   edit: deny
   bash:

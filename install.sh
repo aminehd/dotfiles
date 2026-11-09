@@ -295,6 +295,12 @@ fi
 command -v yaegi >/dev/null 2>&1 && echo "  yaegi installed" || true
 
 # --------------------------------------------------------------------------
+step "PlantUML (diagrams for nvim and the uml-render skill)"
+# --------------------------------------------------------------------------
+# Renders on this machine, no sudo and no plantuml server. Safe to run again.
+"$DOTFILES/setup-plantuml.sh" || echo "  PlantUML install failed, the rest of the setup is fine"
+
+# --------------------------------------------------------------------------
 step "oh-my-zsh and its plugins"
 # --------------------------------------------------------------------------
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then

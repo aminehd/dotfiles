@@ -9,5 +9,6 @@ Before you tell me a change is done:
 2. Build it. For Go: `go build ./...` and `go vet ./...` on the packages you touched.
 3. Run the tests for the code you changed. For Go: `go test ./path/to/pkg/...`.
 4. Read the LSP diagnostics for the files you edited.
-5. Report what you ran and what happened, with the failing output if anything failed.
+5. If the repo has a `.golangci` config, run `golangci-lint run` on the packages you touched. If it isn't installed, say so.
+6. Report what you ran and what happened, with the failing output if anything failed.
    Only say "done" when the build and the tests pass.

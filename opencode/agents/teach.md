@@ -11,6 +11,8 @@ permission:
     "cat *": allow
     "git log*": allow
     "git show *": allow
+    "git diff*": allow
+    "rtk git diff*": allow
     "kubectl explain *": allow
     "helm template *": allow
 ---

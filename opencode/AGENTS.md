@@ -43,4 +43,4 @@ while I work, so I want to understand what you do, not just get the result.
 ## Skills you have
 Load the matching skill when the task fits: k8s-inspect, trace-k8s-object, read-helm-chart,
 read-k8s-controller, deploy-verify, debug-systematically, tdd, explain-top-down,
-git-commit, verify-before-done.
+git-commit, verify-before-done, uml-render, whole-then-build.

@@ -160,9 +160,15 @@ Not included: terminal font and colours.
   `review` reviews the diff, `explore` fast read-only search subagent (set a cheap `model:` in it)
 - plugins: `rtk.ts` sends shell commands through rtk, so the agent reads short output
 - commands: `/kstatus`, `/kwhy <kind>/<name> -n <ns>`, `/kwho ...`, `/explain <thing>`,
-  `/chart <path>`, `/review`, `/commit`
+  `/chart <path>`, `/review`, `/commit`, `/quiz [thing]`
 - skills: k8s-inspect, trace-k8s-object, read-helm-chart, read-k8s-controller, deploy-verify,
-  debug-systematically, tdd, explain-top-down, git-commit, verify-before-done
+  debug-systematically, tdd, explain-top-down, git-commit, verify-before-done, uml-render, whole-then-build
+- `config.json` has no model names on purpose. Set a fast model in the machine's own `opencode.json`:
+  `small_model` and `agent.explore.model`
+- The `ask` rules are listed twice, with and without `rtk `, because the rtk plugin rewrites the command
+  before the rule is checked
+- `uml-render` draws a class diagram to `~/uml/<name>.puml` and renders the PNG on this machine. Its `render.sh`
+  prints the exact failing line so the agent can fix it, and uses smetana when graphviz is missing
 
 ## Cursor
 
