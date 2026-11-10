@@ -22,7 +22,12 @@ export EDITOR=nvim
 export COLORTERM="${COLORTERM:-truecolor}"
 # Extra opencode settings (LSP on). opencode merges this on top of
 # ~/.config/opencode/opencode.json, so the model setup there stays untouched.
-export OPENCODE_CONFIG="$DOTFILES/opencode/config.json"
+export OPENCODE_CONFIG="$DOTFILES/agent/opencode/config.json"
+# Agent harnesses install into these (opencode 2, pi, omp, herdr). Put yours first,
+# so an older opencode elsewhere on PATH does not win.
+for d in "$HOME/.opencode/bin" "$HOME/.pi/bin" "$HOME/.omp/bin"; do
+  [[ -d "$d" ]] && export PATH="$d:$PATH"
+done
 
 # --------------------------------------------------------------------------
 # oh-my-zsh

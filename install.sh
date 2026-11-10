@@ -255,18 +255,11 @@ link "$DOTFILES/git/gitconfig"  "$HOME/.gitconfig"
 link "$DOTFILES/git/ignore"     "$HOME/.config/git/ignore"
 link "$DOTFILES/k9s/aliases.yaml" "$HOME/.config/k9s/aliases.yaml"
 link "$DOTFILES/k9s/plugins.yaml" "$HOME/.config/k9s/plugins.yaml"
-# opencode: rules, agents, slash commands and skills. The model and provider
-# settings (opencode.json) are left to the machine's own setup.
-for f in AGENTS.md tui.json agents commands skills plugins; do
-  link "$DOTFILES/opencode/$f" "$HOME/.config/opencode/$f"
-done
-
-# Cursor: rtk hook, MCP servers and the same skills as opencode.
-# User rules live in Cursor's settings, not on disk (see README).
-# mcp.json is only linked with WITH_MCP=1, same as Serena below.
-link "$DOTFILES/cursor/hooks.json" "$HOME/.cursor/hooks.json"
-[[ "${WITH_MCP:-0}" == 1 ]] && link "$DOTFILES/cursor/mcp.json" "$HOME/.cursor/mcp.json"
-link "$DOTFILES/opencode/skills" "$HOME/.cursor/skills"
+# --------------------------------------------------------------------------
+step "Agent harnesses (see agent/README.md)"
+# --------------------------------------------------------------------------
+# opencode 2, pi, omp, herdr and Cursor, sharing one AGENTS.md and one skills folder.
+"$DOTFILES/agent/install.sh" || echo "  agent setup had errors, the rest of the setup is fine"
 
 # --------------------------------------------------------------------------
 step "Serena (code search MCP for opencode)"

@@ -33,9 +33,17 @@ while I work, so I want to understand what you do, not just get the result.
   Never read a whole test file; they are huge.
 - YAML: `yq '.spec.template' file.yaml` instead of reading the whole file.
   Cluster objects: `kubectl get ... -o yaml | kubectl neat`.
-- For "where is X / who calls Y", ask the `explore` subagent instead of searching yourself.
+- For "where is X / who calls Y", ask a read-only search subagent instead of searching yourself:
+  `explore` in opencode, `scout` in pi and omp.
 
-## Trying code in a REPL
+## Subagents and other agents
+- Delegate only when it pays: research that would flood your context, independent tasks in
+  parallel, or a check by an agent that didn't do the work. Otherwise stay in one session.
+- Brief a subagent like a new colleague: goal, files, constraints, what to report back.
+  Ask for file:line and proof (test output), not "done".
+- One writer at a time per repo. Reviewers and scouts never edit files.
+
+## Trying code in a REPL (opencode, with the opencode-pty plugin)
 - To check how a Go type or snippet behaves, start `yaegi` with `pty_spawn`, send lines with
   `pty_write`, read with `pty_read`. Show me what you sent and what came back.
 - Python: `python3 -i` the same way. Kill the session with `pty_kill` when done.

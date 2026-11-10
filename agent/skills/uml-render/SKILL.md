@@ -7,7 +7,7 @@ Write to ~/uml/<name>.puml, never inside the repo.
 Never use Kroki or any online renderer. Never put diagram text in a URL.
 Read real signatures from the code. Don't guess. Max 15 classes, relevant methods only.
 
-Render only with: ~/.config/opencode/skills/uml-render/render.sh ~/uml/<name>.puml
+Render only with: ~/.agents/skills/uml-render/render.sh ~/uml/<name>.puml
 You are not done until it prints OK. Then give me the PNG path; don't try to display it.
 If it fails, fix only the line it prints and run it again. Stop after 3 tries and show me the error and the file.
 
