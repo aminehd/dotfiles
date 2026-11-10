@@ -35,7 +35,7 @@ step "Back up old opencode sessions"
 # opencode 2 goes in, so nothing is lost even if 2 cannot open them.
 DATA="$HOME/.local/share/opencode"
 if [[ -d "$DATA" && ! -d "$DATA-v1-backup" ]] && have opencode \
-   && [[ "$(opencode --version 2>/dev/null)" == 1.* ]]; then
+   && [[ "$(opencode --version 2>/dev/null | tail -1)" == 1.* ]]; then
   cp -a "$DATA" "$DATA-v1-backup"
   echo "  copied to $DATA-v1-backup"
 else
@@ -46,7 +46,7 @@ fi
 step "Harnesses"
 # --------------------------------------------------------------------------
 # Only installs what is missing. To upgrade one, run its line by hand.
-if have opencode && [[ "$(opencode --version 2>/dev/null)" == 1.* ]]; then
+if have opencode && [[ "$(opencode --version 2>/dev/null | tail -1)" == 1.* ]]; then
   echo "  opencode 1 found at $(command -v opencode): uninstall it first (README step 1), skipped"
 elif ! have opencode; then
   curl -fsSL https://opencode.ai/v2/install | bash || echo "  opencode install failed"
@@ -61,7 +61,7 @@ if have pi && ! pi list 2>/dev/null | grep -q pi-subagents; then
 fi
 
 for t in opencode pi omp herdr rtk; do
-  have "$t" && echo "  $t  $("$t" --version 2>/dev/null | head -1)" || echo "  $t  missing"
+  have "$t" && echo "  $t  $("$t" --version 2>/dev/null | tail -1)" || echo "  $t  missing"
 done
 
 # --------------------------------------------------------------------------
